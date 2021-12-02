@@ -5,7 +5,7 @@
     var map = new Dictionary<int, int>();
     var maxLen = 0;
     var lastRepeatPos = -1;
-    for (int i = 0; i < s.Length; i++)
+    for (var i = 0; i < s.Length; i++)
     {
         if (map.ContainsKey(s[i]) && lastRepeatPos < map[s[i]])
             lastRepeatPos = map[s[i]];
