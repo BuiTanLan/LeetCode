@@ -1,25 +1,38 @@
-﻿string Convert(string s, int numRows)
+﻿string LongestPalindrome(string s)
 {
-    if (numRows <= 1 || s.Length <= 1) { return s; }
+    if (string.IsNullOrWhiteSpace(s) || s.Length == 1) return s;
 
-    var result = new char[s.Length];
-    var index = 0;
-    for (var i = 0; i < numRows; i++)
+    var n2 = s.Length * 2 + 1;
+    var s2 = new char[n2];
+    for (var i = 0; i < s.Length; i++)
     {
-        for (var j = 0; (numRows * 2 - 2) * j + i < s.Length; j++)
+        s2[i * 2] = '#';
+        s2[i * 2 + 1] = s[i];
+    }
+    s2[n2 - 1] = '#';
+
+    var p = new int[n2];
+    int rangeMax = 0, center = 0;
+    var longestCenter = 0;
+
+    for (var i = 1; i < n2 - 1; i++)
+    {
+        if (rangeMax > i)
+            p[i] = Math.Min(p[center * 2 - i], rangeMax - i);
+
+        while (i - 1 - p[i] >= 0 && i + 1 + p[i] < n2 && s2[i - 1 - p[i]] == s2[i + 1 + p[i]])
+            p[i]++;
+
+        if (i + p[i] > rangeMax)
         {
-            var originalIndex = (numRows * 2 - 2) * j + i;
-            result[index++] = s[originalIndex];
-
-            if (i == 0 || i == numRows - 1) { continue; }
-
-            originalIndex = originalIndex + (numRows * 2 - 2) - i * 2;
-            if (originalIndex < s.Length)
-            {
-                result[index++] = s[originalIndex];
-            }
+            center = i;
+            rangeMax = i + p[i];
         }
+
+        if (p[i] > p[longestCenter])
+            longestCenter = i;
     }
 
-    return new string(result);
+    var range = p[longestCenter];
+    return s.Substring((longestCenter - range) / 2, range);
 }

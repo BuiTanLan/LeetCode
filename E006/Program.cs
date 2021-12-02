@@ -1,18 +1,25 @@
-﻿int Reverse(int x)
+﻿string Convert(string s, int numRows)
 {
-    var result = 0;
+    if (numRows <= 1 || s.Length <= 1) { return s; }
 
-    const int positiveOverflow = int.MaxValue / 10;
-    const int negativeOverflow = int.MinValue / 10;
-
-    for (; x != 0; x /= 10)
+    var result = new char[s.Length];
+    var index = 0;
+    for (var i = 0; i < numRows; i++)
     {
-        if (result is > positiveOverflow or < negativeOverflow)
+        for (var j = 0; (numRows * 2 - 2) * j + i < s.Length; j++)
         {
-            return 0;
+            var originalIndex = (numRows * 2 - 2) * j + i;
+            result[index++] = s[originalIndex];
+
+            if (i == 0 || i == numRows - 1) { continue; }
+
+            originalIndex = originalIndex + (numRows * 2 - 2) - i * 2;
+            if (originalIndex < s.Length)
+            {
+                result[index++] = s[originalIndex];
+            }
         }
-        result = result * 10 + x % 10;
     }
 
-    return result;
+    return new string(result);
 }
